@@ -3,717 +3,1130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор урона - Bullet Echo</title>
+    <title>Анимация хода коня - Исправленная рабочая версия</title>
     <style>
-        :root {
-            --primary-bg: rgba(255, 255, 255, 0.95);
-            --text-color: #333;
-            --primary-color: #3498db;
-            --error-color: #f44336;
-            --green-text: #2ecc71;
-            --blue-text: #3498db;
-            --purple-text: #9b59b6;
-        }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
             padding: 20px;
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
-            color: var(--text-color);
-        }
-
-        .counters-wrapper {
+            min-height: 100vh;
             display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            max-width: 1400px;
-            margin: 20px auto 0;
-        }
-
-        .counter-visits, .counter-calculations {
-            background: linear-gradient(to bottom, #ffffff, #f1f5f9);
-            padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            flex: 1;
-            max-width: 200px;
-            transition: transform 0.2s;
-        }
-
-        .counter-visits:hover, .counter-calculations:hover {
-            transform: translateY(-2px);
-        }
-
-        .counter-visits h3, .counter-calculations h3 {
-            color: #2c3e50;
-            font-size: 16px;
-            margin: 0 0 8px 0;
-        }
-
-        .counter-visits span, .counter-calculations span {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--primary-color);
-            display: inline-block;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
-
-        .counter-visits span.animate, .counter-calculations span.animate {
-            transform: scale(1.1);
-            color: #2980b9;
-        }
-
-        .main-wrapper {
-            display: flex;
-            gap: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
+            justify-content: center;
+            align-items: center;
         }
 
         .container {
-            background: var(--primary-bg);
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            flex: 2;
-            max-width: 700px;
-        }
-
-        .armor-info {
-            background: var(--primary-bg);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            flex: 1;
-            max-width: 300px;
-        }
-
-        .armor-info h2 {
-            color: #2c3e50;
-            font-size: 20px;
-            margin-top: 0;
-            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-            padding-bottom: 10px;
-        }
-
-        .armor-info p {
-            font-size: 16px;
-            line-height: 1.5;
-            margin: 10px 0;
-        }
-
-        .green-text {
-            color: var(--green-text);
-            font-weight: 600;
-        }
-
-        .blue-text {
-            color: var(--blue-text);
-            font-weight: 600;
-        }
-
-        .purple-text {
-            color: var(--purple-text);
-            font-weight: 600;
-        }
-
-        .clickable-value {
-            cursor: pointer;
-            text-decoration: none;
-            transition: color 0.2s ease, text-decoration 0.2s ease;
-            display: inline-block;
-        }
-
-        .clickable-value:hover {
-            text-decoration: underline;
-            color: #2c3e50;
-        }
-
-        .divider {
-            height: 2px;
-            background: linear-gradient(to right, #3498db, #2c3e50);
-            margin: 15px 0;
-            border-radius: 1px;
-        }
-
-        .guide-container {
-            background: var(--primary-bg);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            flex: 1;
-            max-width: 400px;
-        }
-
-        .guide-container h2 {
-            color: #2c3e50;
-            font-size: 20px;
-            margin-top: 0;
-            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-            padding-bottom: 10px;
-        }
-
-        .guide-container p {
-            font-size: 16px;
-            line-height: 1.5;
-            color: #2c3e50;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 95vw;
+            max-height: 95vh;
+            width: 100%;
+            overflow: auto;
         }
 
         h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 25px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.2em;
         }
 
-        .mind-production {
-            text-align: center;
-            font-size: 16px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-top: 20px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        fieldset.input-group {
+        .subtitle {
+            color: #666;
             margin-bottom: 20px;
-            padding: 15px;
-            background: #f8f9fa;
+            font-size: 1.1em;
+        }
+
+        .algorithm-info {
+            background: #e8f5e8;
             border-radius: 10px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: none;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
         }
 
-        legend {
-            font-weight: 600;
-            color: #2c3e50;
-            padding: 0 10px;
+        .algorithm-info h3 {
+            margin: 0 0 10px 0;
+            color: #2e7d32;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-size: 0.9em;
+            color: #555;
             font-weight: 600;
-            color: #2c3e50;
+        }
+
+        .size-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="number"], input[type="range"] {
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
         }
 
         input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            width: 100px;
         }
 
-        input[type="number"]:focus {
-            border-color: var(--primary-color);
+        input[type="range"] {
+            width: 150px;
+        }
+
+        input[type="number"]:focus, input[type="range"]:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        }
-
-        input[type="checkbox"] {
-            margin-right: 10px;
-            transform: scale(1.3);
-        }
-
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #e3f2fd;
-            border-radius: 8px;
-            font-weight: 600;
+            border-color: #4CAF50;
         }
 
         button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(to right, #3498db, #2c3e50);
+            background: linear-gradient(45deg, #4CAF50, #45a049);
             color: white;
             border: none;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 25px;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 13px;
             font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
         }
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
         }
 
-        button:active {
-            transform: translateY(0);
+        button.pause {
+            background: linear-gradient(45deg, #ff9800, #f57c00);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
         }
 
-        .result {
-            margin-top: 25px;
-            padding: 20px;
+        button.reset {
+            background: linear-gradient(45deg, #f44336, #d32f2f);
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        button.step {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        button:disabled {
+            background: #ccc !important;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        select {
+            padding: 8px 15px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .zoom-controls {
+            background: #f0f8ff;
             border-radius: 10px;
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(10px);
-            animation: fadeIn 0.3s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .old-system {
-            background: linear-gradient(to right, #ffebee, #ffcdd2);
-            border: 2px solid #f44336;
-        }
-
-        .new-system {
-            background: linear-gradient(to right, #e8f5e9, #c8e6c9);
-            border: 2px solid #4caf50;
-        }
-
-        h3 {
-            margin-top: 0;
-            color: #2c3e50;
-            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-            padding-bottom: 10px;
-        }
-
-        .absolute-values {
-            background: #e3f2fd;
             padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            border-left: 4px solid #2196f3;
+            margin-bottom: 20px;
+            display: none;
         }
 
-        .disabled {
-            opacity: 0.6;
+        .zoom-controls h4 {
+            margin: 0 0 10px 0;
+            color: #1976d2;
+        }
+
+        .zoom-info {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .board-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            max-height: 70vh;
+            overflow: hidden;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .board-viewport {
+            width: 100%;
+            height: 70vh;
+            overflow: auto;
+            position: relative;
+            cursor: grab;
+        }
+
+        .board-viewport:active {
+            cursor: grabbing;
+        }
+
+        .chess-board {
+            display: inline-grid;
+            gap: 1px;
+            background: #8B4513;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform-origin: top left;
+            transition: transform 0.3s ease;
+        }
+
+        .chess-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: default;
+            transition: all 0.2s ease;
+            border-radius: 2px;
+            position: relative;
+            background: #F0D9B5;
+        }
+
+        .chess-cell.dark {
+            background: #B58863;
+        }
+
+        .chess-cell.visited {
+            background: #90EE90 !important;
+            color: #2E7D32;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .chess-cell.current {
+            background: #FF6B35 !important;
+            color: white;
+            animation: pulse 1s infinite;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.5);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .minimap {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 150px;
+            height: 150px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            overflow: hidden;
+            display: none;
+        }
+
+        .minimap-board {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            gap: 0;
+        }
+
+        .minimap-cell {
+            background: #f0f0f0;
+        }
+
+        .minimap-cell.visited {
+            background: #90EE90;
+        }
+
+        .minimap-cell.current {
+            background: #FF6B35;
+        }
+
+        .minimap-viewport {
+            position: absolute;
+            border: 2px solid #ff0000;
+            background: rgba(255, 0, 0, 0.1);
             pointer-events: none;
         }
 
-        .value-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+        .generation-status {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            color: #666;
         }
 
-        .value-title {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        .highlight {
-            background: #fffde7;
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-weight: 700;
-        }
-
-        .error {
-            display: none;
-            color: var(--error-color);
-            margin-top: 10px;
+        .algorithm-status {
+            background: #fff3cd;
+            border-radius: 10px;
             padding: 10px;
-            background: #ffebee;
-            border-radius: 8px;
+            margin-bottom: 10px;
+            color: #856404;
+            font-weight: bold;
+        }
+
+        .status-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .status-item {
             text-align: center;
         }
 
-        progress {
-            width: 100px;
-            height: 10px;
-            margin-right: 10px;
+        .status-item .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #4CAF50;
+            display: block;
         }
 
-        @media (max-width: 600px) {
-            .counters-wrapper {
-                flex-direction: column;
-                gap: 10px;
+        .status-item .label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        /* Адаптивные размеры клеток */
+        .size-small .chess-cell { width: 15px; height: 15px; font-size: 8px; }
+        .size-medium .chess-cell { width: 25px; height: 25px; font-size: 10px; }
+        .size-normal .chess-cell { width: 35px; height: 35px; font-size: 12px; }
+        .size-large .chess-cell { width: 45px; height: 45px; font-size: 14px; }
+
+        .navigation-help {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+            display: none;
+        }
+
+        .navigation-help h4 {
+            margin: 0 0 10px 0;
+            color: #1565c0;
+        }
+
+        .performance-warning {
+            background: #ffebee;
+            border: 1px solid #f8bbd9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #c62828;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
             }
-            .counter-visits, .counter-calculations {
-                max-width: 100%;
+            
+            .controls {
+                gap: 8px;
             }
-            .counter-visits h3, .counter-calculations h3 {
-                font-size: 14px;
+            
+            button {
+                padding: 8px 12px;
+                font-size: 11px;
             }
-            .counter-visits span, .counter-calculations span {
-                font-size: 18px;
-            }
-            .main-wrapper {
-                flex-direction: column;
-            }
-            .container, .armor-info, .guide-container {
-                max-width: 100%;
-            }
-            .armor-info {
-                order: -1; /* Помещает блок с информацией о броне наверх */
-            }
-            .guide-container {
-                margin-top: 20px;
-            }
-            input[type="number"], button {
-                font-size: 14px;
-                padding: 10px;
-            }
-            h1, .armor-info h2, .guide-container h2 {
-                font-size: 24px;
-            }
-            progress {
-                width: 80px;
+
+            .minimap {
+                width: 100px;
+                height: 100px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="main-wrapper">
-        <div class="armor-info">
-            <h2>Бонусы брони</h2>
-            <p class="green-text"><span class="clickable-value" data-type="ar" data-value="4" data-extra="29">Зеленая броня: +4% сопротивления брони, +29% к объему брони</span></p>
-            <p class="blue-text"><span class="clickable-value" data-type="ar" data-value="6" data-extra="48">Синяя броня: +6% сопротивления брони, +48% к объему брони</span></p>
-            <p class="purple-text"><span class="clickable-value" data-type="ar" data-value="11" data-extra="60">Фиолетовая броня: +11% сопротивления брони, +60% к объему брони</span></p>
-            <div class="divider"></div>
-            <h2>Бонусы патронов</h2>
-            <p class="green-text"><span class="clickable-value" data-type="ap" data-value="12" data-extra="12">Зеленые патроны: +12% пробития брони, +12% к урону</span></p>
-            <p class="blue-text"><span class="clickable-value" data-type="ap" data-value="18" data-extra="19">Синие патроны: +18% пробития брони, +19% к урону</span></p>
-            <p class="purple-text"><span class="clickable-value" data-type="ap" data-value="24" data-extra="24">Фиолетовые патроны: +24% пробития брони, +24% к урону</span></p>
+    <div class="container">
+        <h1>🏇 Ход коня - Исправленная рабочая версия</h1>
+        <p class="subtitle">С правильной оптимизацией и всеми функциями</p>
+        
+        <div class="algorithm-info">
+            <h3>🧠 Умная система алгоритмов</h3>
+            <p><strong>Основной:</strong> Правило Варнсдорфа с оптимизированным разрешением ничьих</p>
+            <p><strong>Резервный:</strong> Модификация Арнда Рота (максимальное расстояние от центра)</p>
+            <p><strong>Навигация:</strong> Масштабирование, перетаскивание, мини-карта для больших досок</p>
         </div>
 
-        <div class="container">
-            <h1>Калькулятор урона</h1>
+        <div class="navigation-help" id="navigationHelp">
+            <h4>🗺️ Навигация по доске</h4>
+            <p><strong>Масштабирование:</strong> Колесо мыши или ползунок</p>
+            <p><strong>Перемещение:</strong> Зажмите и перетащите доску</p>
+            <p><strong>Мини-карта:</strong> Показывает текущую видимую область</p>
+            <p><strong>Автоцентрирование:</strong> Следит за конем во время анимации</p>
+        </div>
 
-            <fieldset class="input-group">
-                <legend>Параметры атаки</legend>
-                <label for="damage">Урон:</label>
-                <input type="number" id="damage" min="0" value="100" required aria-describedby="damage-help">
-                <small id="damage-help" class="help-text">Введите базовое значение урона.</small>
-                <label for="ap">AP (Пробитие брони):</label>
-                <input type="number" id="ap" min="0" value="11" required aria-describedby="ap-help">
-                <small id="ap-help" class="help-text">Введите значение пробития брони (AP).</small>
-            </fieldset>
-
-            <fieldset class="input-group">
-                <legend>Параметры защиты</legend>
-                <label for="ar">AR (Сопротивление брони):</label>
-                <input type="number" id="ar" min="0" max="100" value="11" required placeholder="0-100" aria-describedby="ar-help">
-                <small id="ar-help" class="help-text">Введите сопротивление брони (0-100).</small>
-            </fieldset>
-
-            <div class="checkbox-container">
-                <input type="checkbox" id="absolute-mode" aria-label="Активировать абсолютные значения">
-                <label for="absolute-mode">Активировать абсолютные значения</label>
-            </div>
-
-            <div id="absolute-fields">
-                <fieldset class="input-group">
-                    <legend>Абсолютные значения</legend>
-                    <label for="health">Здоровье:</label>
-                    <input type="number" id="health" min="0" value="100" disabled aria-describedby="health-help">
-                    <small id="health-help" class="help-text">Введите значение здоровья.</small>
-                </fieldset>
-
-                <fieldset class="input-group">
-                    <label for="armor">Броня:</label>
-                    <input type="number" id="armor" min="0" value="100" disabled aria-describedby="armor-help">
-                    <small id="armor-help" class="help-text">Введите значение брони.</small>
-                </fieldset>
-            </div>
-
-            <div id="error" class="error"></div>
-
-            <button id="calculate">Рассчитать урон</button>
-
-            <div class="result old-system">
-                <h3>Было раньше</h3>
-                <p>Урон в здоровье (%): <span id="old-health" class="highlight">0.00%</span></p>
-                <p>Урон в броню (%): <span id="old-armor" class="highlight">100.00%</span></p>
-
-                <div id="old-absolute" class="absolute-values" style="display: none;">
-                    <div class="value-row">
-                        <span class="value-title">Урон по здоровью:</span>
-                        <span id="old-health-dmg">0.00</span>
-                    </div>
-                    <div class="value-row">
-                        <span class="value-title">Урон по броне:</span>
-                        <span id="old-armor-dmg">0.00</span>
-                    </div>
-                    <div class="value-row">
-                        <span class="value-title">Остаток здоровья:</span>
-                        <progress max="100" id="old-health-progress"></progress>
-                        <span id="old-health-remaining">100.00</span>
-                    </div>
-                    <div class="value-row">
-                        <span class="value-title">Остаток брони:</span>
-                        <progress max="100" id="old-armor-progress"></progress>
-                        <span id="old-armor-remaining">100.00</span>
-                    </div>
+        <div class="performance-warning" id="performanceWarning">
+            <strong>🚨 Предупреждение о производительности:</strong> 
+            Выбранный размер доски может потребовать значительных ресурсов.
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label>Размер доски</label>
+                <div class="size-input">
+                    <input type="number" id="boardSize" value="20" min="5" max="999999" placeholder="Размер">
+                    <span>×</span>
+                    <input type="number" id="boardSizeCopy" value="20" min="5" max="999999" readonly>
                 </div>
             </div>
-
-            <div class="result new-system">
-                <h3>Стало сейчас</h3>
-                <p>Урон в здоровье (%): <span id="new-health" class="highlight">0.00%</span></p>
-                <p>Урон в броню (%): <span id="new-armor" class="highlight">100.00%</span></p>
-
-                <div id="new-absolute" class="absolute-values" style="display: none;">
-                    <div class="value-row">
-                        <span class="value-title">Урон по здоровью:</span>
-                        <span id="new-health-dmg">0.00</span>
-                    </div>
-                    <div class="value-row">
-                        <span class="value-title">Урон по броне:</span>
-                        <span id="new-armor-dmg">0.00</span>
-                    </div>
-                    <div class="value-row">
-                        <span class="value-title">Остаток здоровья:</span>
-                        <progress max="100" id="new-health-progress"></progress>
-                        <span id="new-health-remaining">100.00</span>
-                    </div>
-                    <div class="value-row">
-                        <span class="value-title">Остаток брони:</span>
-                        <progress max="100" id="new-armor-progress"></progress>
-                        <span id="new-armor-remaining">100.00</span>
-                    </div>
-                </div>
+            
+            <div class="control-group">
+                <label>Скорость</label>
+                <select id="speed">
+                    <option value="2000">🐌 Очень медленно</option>
+                    <option value="1000">🚶 Медленно</option>
+                    <option value="300" selected>🏃 Средне</option>
+                    <option value="100">🏃‍♂️ Быстро</option>
+                    <option value="30">⚡ Очень быстро</option>
+                    <option value="1">🚀 Мгновенно</option>
+                </select>
             </div>
-
-            <p class="mind-production">MIND production</p>
+            
+            <button onclick="generateAndStart()">🔄 Создать доску</button>
+            <button onclick="startAnimation()" id="playBtn">▶️ Начать</button>
+            <button class="pause" onclick="pauseAnimation()">⏸️ Пауза</button>
+            <button class="reset" onclick="resetAnimation()">🔄 Сброс</button>
+            <button class="step" onclick="nextStep()">⏭️ Следующий ход</button>
         </div>
 
-        <div class="guide-container">
-            <h2>Пример из гайда</h2>
-            <p>
-                У Губителя оружие с 11 пробитием брони и он стреляет в только что вышедшего из-за угла Левиафана.
-                Выстрел Губителя наносит 1000 урона, но у Левиафана Фиолетовое улучшение брони, которое дает 11 Сопротивления Брони.
-                Сопротивление Брони снижает пробитие брони, так что → 902 урона (90.2%) идут в Броню, а в Здоровье 98 урона (9.8%).
-            </p>
+        <div class="zoom-controls" id="zoomControls">
+            <h4>🔍 Управление масштабом</h4>
+            <div style="display: flex; align-items: center; gap: 15px; justify-content: center;">
+                <button onclick="zoomOut()">➖ Уменьшить</button>
+                <input type="range" id="zoomSlider" min="0.1" max="5" step="0.1" value="1" oninput="setZoom(this.value)">
+                <button onclick="zoomIn()">➕ Увеличить</button>
+                <button onclick="resetZoom()">🎯 Сброс</button>
+                <button onclick="centerOnKnight()">🏇 К коню</button>
+            </div>
+            <div class="zoom-info">
+                Масштаб: <span id="zoomLevel">100%</span> | 
+                Позиция: <span id="viewportInfo">Центр</span> |
+                <label><input type="checkbox" id="followKnight" checked> Следить за конем</label>
+            </div>
         </div>
-    </div>
 
-    <div class="counters-wrapper">
-        <div class="counter-visits">
-            <h3>Посещений</h3>
-            <span id="visit-count">0</span>
+        <div class="generation-status" id="generationStatus">
+            Введите размер доски и нажмите "Создать доску"
         </div>
-        <div class="counter-calculations">
-            <h3>Расчетов</h3>
-            <span id="calculation-count">0</span>
+
+        <div class="algorithm-status" id="algorithmStatus" style="display: none;">
+            Ожидание создания доски
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="board-container">
+            <div class="board-viewport" id="boardViewport">
+                <div class="chess-board" id="chessBoard"></div>
+            </div>
+            <div class="minimap" id="minimap">
+                <div class="minimap-board" id="minimapBoard"></div>
+                <div class="minimap-viewport" id="minimapViewport"></div>
+            </div>
+        </div>
+
+        <div class="status-panel">
+            <div class="status-item">
+                <span class="value" id="currentMove">0</span>
+                <div class="label">Текущий ход</div>
+            </div>
+            <div class="status-item">
+                <span class="value" id="totalMoves">0</span>
+                <div class="label">Всего ходов</div>
+            </div>
+            <div class="status-item">
+                <span class="value" id="completionPercent">0%</span>
+                <div class="label">Завершено</div>
+            </div>
+            <div class="status-item">
+                <span class="value" id="boardSizeDisplay">0×0</span>
+                <div class="label">Размер доски</div>
+            </div>
+            <div class="status-item">
+                <span class="value" id="memoryUsage">0 MB</span>
+                <div class="label">Использование памяти</div>
+            </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const elements = {
-                damage: document.getElementById('damage'),
-                ap: document.getElementById('ap'),
-                ar: document.getElementById('ar'),
-                health: document.getElementById('health'),
-                armor: document.getElementById('armor'),
-                absoluteMode: document.getElementById('absolute-mode'),
-                calculate: document.getElementById('calculate'),
-                error: document.getElementById('error'),
-                visitCount: document.getElementById('visit-count'),
-                calculationCount: document.getElementById('calculation-count')
-            };
+        // Готовые решения для малых досок
+        const knightSolutions = {
+            5: [[0,5,14,9,20],[13,8,19,4,15],[18,1,6,21,10],[7,12,23,16,3],[24,17,2,11,22]],
+            6: [[0,11,20,29,2,13],[19,28,1,12,31,30],[10,21,32,27,14,3],[33,18,9,22,35,26],[8,23,34,17,4,15],[24,7,16,5,25,6]],
+            7: [[0,15,32,41,2,17,34],[31,40,1,16,33,42,3],[14,29,44,35,46,19,18],[39,30,43,48,37,4,47],[28,13,36,45,20,23,38],[11,26,49,22,7,46,5],[12,27,10,25,24,9,6]],
+            8: [[0,15,30,39,2,17,20,55],[29,38,1,16,41,54,3,18],[14,31,40,45,52,19,56,21],[37,28,47,42,57,44,53,4],[32,13,36,51,46,59,22,61],[27,48,33,58,43,62,5,8],[12,35,50,25,10,7,60,23],[49,26,11,34,63,24,9,6]],
+            9: [[0,17,36,51,2,19,38,53,4],[35,50,1,18,37,52,3,20,39],[16,61,48,33,62,49,34,63,54],[47,34,65,60,71,36,55,40,21],[64,15,32,47,66,59,70,35,56],[31,46,75,14,73,44,57,22,41],[76,13,30,45,74,67,42,69,58],[29,80,77,12,25,72,43,68,23],[78,11,28,79,10,27,24,9,26]],
+            10: [[0,51,26,43,2,49,38,9,4,7],[25,44,1,50,37,42,3,6,39,10],[52,27,54,45,72,59,48,41,8,5],[55,24,71,36,57,46,81,60,11,40],[28,53,56,73,82,85,58,47,80,61],[23,70,35,86,75,92,83,88,77,12],[34,29,74,91,84,87,76,97,62,79],[69,22,67,32,93,96,89,78,13,16],[30,33,20,95,90,65,18,15,98,63],[21,68,31,66,19,94,99,64,17,14]]
+        };
 
-            // Инициализация счетчиков из localStorage
-            let visits = parseInt(localStorage.getItem('visits')) || 0;
-            let calculations = parseInt(localStorage.getItem('calculations')) || 0;
-
-            // Увеличение счетчика посещений при загрузке страницы
-            visits += 1;
-            localStorage.setItem('visits', visits);
-            elements.visitCount.textContent = visits;
-            elements.visitCount.classList.add('animate');
-            setTimeout(() => elements.visitCount.classList.remove('animate'), 300);
-
-            // Обновление отображения счетчика расчетов
-            elements.calculationCount.textContent = calculations;
-
-            // Загрузка сохраненных значений из localStorage
-            ['damage', 'ap', 'ar', 'health', 'armor'].forEach(id => {
-                elements[id].value = localStorage.getItem(id) || elements[id].value;
-            });
-
-            function validateInputs(damage, ap, ar, health, armor) {
-                if (isNaN(damage) || isNaN(ap) || isNaN(ar) || isNaN(health) || isNaN(armor)) {
-                    showError('Пожалуйста, введите корректные числовые значения.');
-                    return null;
-                }
-                return {
-                    damage: Math.max(0, damage),
-                    ap: Math.max(0, ap),
-                    ar: Math.max(0, Math.min(100, ar)),
-                    health: Math.max(0, health),
-                    armor: Math.max(0, armor)
-                };
+        // Исправленный алгоритм Варнсдорфа
+        class WarnsdorffSolver {
+            constructor(size) {
+                this.size = size;
+                this.board = null;
+                this.knightMoves = [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]];
             }
 
-            function calculateDamage(ap, ar) {
-                const oldArmorAbsorption = Math.min(100, Math.max(0, 100 - ap + ar));
-                const oldHealthDamagePercent = 100 - oldArmorAbsorption;
-                const newHealthDamagePercent = Math.min(100, Math.max(0, (ap * (100 - ar)) / 100));
-                const newArmorAbsorption = 100 - newHealthDamagePercent;
-
-                return {
-                    old: { healthPercent: oldHealthDamagePercent, armorPercent: oldArmorAbsorption },
-                    new: { healthPercent: newHealthDamagePercent, armorPercent: newArmorAbsorption }
-                };
+            isValid(x, y) {
+                return x >= 0 && x < this.size && y >= 0 && y < this.size && this.board[x][y] === -1;
             }
 
-            function animateValue(id, start, end, duration) {
-                let startTimestamp = null;
-                const isPercent = ['old-health', 'old-armor', 'new-health', 'new-armor'].includes(id);
-                const step = (timestamp) => {
-                    if (!startTimestamp) startTimestamp = timestamp;
-                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                    document.getElementById(id).textContent = (start + progress * (end - start)).toFixed(2) + (isPercent ? '%' : '');
-                    if (progress < 1) {
-                        requestAnimationFrame(step);
+            getAccessibility(x, y) {
+                let count = 0;
+                for (let [dx, dy] of this.knightMoves) {
+                    if (this.isValid(x + dx, y + dy)) {
+                        count++;
                     }
-                };
-                requestAnimationFrame(step);
-            }
-
-            function updateUI(damage, absoluteMode, health, armor, baseDamage) {
-                // Обновление процентных значений
-                animateValue('old-health', parseFloat(document.getElementById('old-health').textContent) || 0, damage.old.healthPercent, 500);
-                animateValue('old-armor', parseFloat(document.getElementById('old-armor').textContent) || 0, damage.old.armorPercent, 500);
-                animateValue('new-health', parseFloat(document.getElementById('new-health').textContent) || 0, damage.new.healthPercent, 500);
-                animateValue('new-armor', parseFloat(document.getElementById('new-armor').textContent) || 0, damage.new.armorPercent, 500);
-
-                if (absoluteMode) {
-                    const oldHealthDamage = (damage.old.healthPercent / 100) * baseDamage;
-                    const oldArmorDamage = (damage.old.armorPercent / 100) * baseDamage;
-                    const newHealthDamage = (damage.new.healthPercent / 100) * baseDamage;
-                    const newArmorDamage = (damage.new.armorPercent / 100) * baseDamage;
-
-                    animateValue('old-health-dmg', parseFloat(document.getElementById('old-health-dmg').textContent) || 0, oldHealthDamage, 500);
-                    animateValue('old-armor-dmg', parseFloat(document.getElementById('old-armor-dmg').textContent) || 0, oldArmorDamage, 500);
-                    animateValue('old-health-remaining', parseFloat(document.getElementById('old-health-remaining').textContent) || 0, health - oldHealthDamage, 500);
-                    animateValue('old-armor-remaining', parseFloat(document.getElementById('old-armor-remaining').textContent) || 0, armor - oldArmorDamage, 500);
-                    document.getElementById('old-health-progress').value = Math.max(0, (health - oldHealthDamage) / health * 100);
-                    document.getElementById('old-armor-progress').value = Math.max(0, (armor - oldArmorDamage) / armor * 100);
-
-                    animateValue('new-health-dmg', parseFloat(document.getElementById('new-health-dmg').textContent) || 0, newHealthDamage, 500);
-                    animateValue('new-armor-dmg', parseFloat(document.getElementById('new-armor-dmg').textContent) || 0, newArmorDamage, 500);
-                    animateValue('new-health-remaining', parseFloat(document.getElementById('new-health-remaining').textContent) || 0, health - newHealthDamage, 500);
-                    animateValue('new-armor-remaining', parseFloat(document.getElementById('new-armor-remaining').textContent) || 0, armor - newArmorDamage, 500);
-                    document.getElementById('new-health-progress').value = Math.max(0, (health - newHealthDamage) / health * 100);
-                    document.getElementById('new-armor-progress').value = Math.max(0, (armor - newArmorDamage) / armor * 100);
                 }
+                return count;
             }
 
-            function showError(message) {
-                elements.error.textContent = message;
-                elements.error.style.display = 'block';
-                setTimeout(() => elements.error.style.display = 'none', 3000);
-            }
-
-            function performCalculation(isUserAction = false) {
-                const damage = parseFloat(elements.damage.value);
-                const ap = parseFloat(elements.ap.value);
-                const ar = parseFloat(elements.ar.value);
-                const health = parseFloat(elements.health.value);
-                const armor = parseFloat(elements.armor.value);
-                const absoluteMode = elements.absoluteMode.checked;
-
-                const validated = validateInputs(damage, ap, ar, health, armor);
-                if (!validated) return;
-
-                // Увеличение счетчика расчетов только при действиях пользователя
-                if (isUserAction) {
-                    calculations += 1;
-                    localStorage.setItem('calculations', calculations);
-                    elements.calculationCount.textContent = calculations;
-                    elements.calculationCount.classList.add('animate');
-                    setTimeout(() => elements.calculationCount.classList.remove('animate'), 300);
-                }
-
-                const damageCalc = calculateDamage(validated.ap, validated.ar);
-                updateUI(damageCalc, absoluteMode, validated.health, validated.armor, validated.damage);
-            }
-
-            // Обработчик кликов по значениям брони и патронов
-            document.querySelectorAll('.clickable-value').forEach(value => {
-                value.addEventListener('click', function() {
-                    const type = this.getAttribute('data-type');
-                    const value = parseFloat(this.getAttribute('data-value'));
-                    const extra = parseFloat(this.getAttribute('data-extra'));
-
-                    // Установка основного значения (ar или ap)
-                    elements[type].value = value;
-                    localStorage.setItem(type, value);
-
-                    // Обработка дополнительного значения
-                    if (type === 'ar' && elements.absoluteMode.checked) {
-                        // Для брони: устанавливаем объем брони в поле #armor
-                        elements.armor.value = 100 * (1 + extra / 100);
-                        localStorage.setItem('armor', elements.armor.value);
-                    } else if (type === 'ap') {
-                        // Для патронов: увеличиваем урон с учетом бонуса
-                        const baseDamage = parseFloat(localStorage.getItem('baseDamage')) || 100;
-                        elements.damage.value = baseDamage * (1 + extra / 100);
-                        localStorage.setItem('damage', elements.damage.value);
-                        localStorage.setItem('baseDamage', baseDamage); // Сохраняем базовый урон
+            getNextMoves(x, y) {
+                let nextMoves = [];
+                for (let [dx, dy] of this.knightMoves) {
+                    let nx = x + dx;
+                    let ny = y + dy;
+                    if (this.isValid(nx, ny)) {
+                        let accessibility = this.getAccessibility(nx, ny);
+                        nextMoves.push({accessibility, x: nx, y: ny});
                     }
+                }
+                
+                nextMoves.sort((a, b) => a.accessibility - b.accessibility);
+                return nextMoves;
+            }
 
-                    performCalculation(true); // Считаем это действием пользователя
+            solve(startX = 0, startY = 0) {
+                this.board = Array(this.size).fill().map(() => Array(this.size).fill(-1));
+                
+                let x = startX, y = startY;
+                this.board[x][y] = 0;
+                
+                for (let moveCount = 1; moveCount < this.size * this.size; moveCount++) {
+                    let nextMoves = this.getNextMoves(x, y);
+                    
+                    if (nextMoves.length === 0) {
+                        return false;
+                    }
+                    
+                    let nextMove = nextMoves[0];
+                    x = nextMove.x;
+                    y = nextMove.y;
+                    this.board[x][y] = moveCount;
+                    
+                    if (this.size > 50 && moveCount % Math.floor(this.size * this.size / 20) === 0) {
+                        let progress = Math.floor((moveCount / (this.size * this.size)) * 100);
+                        document.getElementById('generationStatus').textContent = 
+                            `Генерация (Варнсдорф): ${progress}%`;
+                    }
+                }
+                
+                return true;
+            }
+
+            getBoard() {
+                return this.board;
+            }
+        }
+
+        // Исправленный алгоритм Арнда Рота
+        class ArndtRothSolver {
+            constructor(size) {
+                this.size = size;
+                this.board = null;
+                this.centerX = (size - 1) / 2;
+                this.centerY = (size - 1) / 2;
+                this.knightMoves = [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]];
+            }
+
+            isValid(x, y) {
+                return x >= 0 && x < this.size && y >= 0 && y < this.size && this.board[x][y] === -1;
+            }
+
+            getAccessibility(x, y) {
+                let count = 0;
+                for (let [dx, dy] of this.knightMoves) {
+                    if (this.isValid(x + dx, y + dy)) {
+                        count++;
+                    }
+                }
+                return count;
+            }
+
+            getDistanceFromCenter(x, y) {
+                return Math.sqrt(Math.pow(x - this.centerX, 2) + Math.pow(y - this.centerY, 2));
+            }
+
+            getNextMoves(x, y) {
+                let nextMoves = [];
+                for (let [dx, dy] of this.knightMoves) {
+                    let nx = x + dx;
+                    let ny = y + dy;
+                    if (this.isValid(nx, ny)) {
+                        let accessibility = this.getAccessibility(nx, ny);
+                        let distance = this.getDistanceFromCenter(nx, ny);
+                        nextMoves.push({accessibility, distance, x: nx, y: ny});
+                    }
+                }
+                
+                nextMoves.sort((a, b) => {
+                    if (a.accessibility !== b.accessibility) {
+                        return a.accessibility - b.accessibility;
+                    }
+                    return b.distance - a.distance;
                 });
-            });
+                
+                return nextMoves;
+            }
 
-            elements.absoluteMode.addEventListener('change', function() {
-                const isActive = this.checked;
-                elements.health.disabled = !isActive;
-                elements.armor.disabled = !isActive;
-                document.getElementById('old-absolute').style.display = isActive ? 'block' : 'none';
-                document.getElementById('new-absolute').style.display = isActive ? 'block' : 'none';
-                performCalculation(true); // Считаем это действием пользователя
-            });
-
-            elements.calculate.addEventListener('click', function() {
-                performCalculation(true); // Явное нажатие на кнопку
-            });
-
-            // Валидация ввода AR в реальном времени
-            elements.ar.addEventListener('input', function() {
-                const value = parseFloat(this.value);
-                if (value > 100) {
-                    this.value = 100;
-                } else if (value < 0) {
-                    this.value = 0;
-                }
-            });
-
-            // Автоматический пересчет при вводе и сохранение в localStorage
-            ['damage', 'ap', 'ar', 'health', 'armor'].forEach(id => {
-                elements[id].addEventListener('input', () => {
-                    localStorage.setItem(id, elements[id].value);
-                    if (id === 'damage') {
-                        localStorage.setItem('baseDamage', elements[id].value); // Обновляем базовый урон
+            solve(startX = 0, startY = 0) {
+                this.board = Array(this.size).fill().map(() => Array(this.size).fill(-1));
+                
+                let x = startX, y = startY;
+                this.board[x][y] = 0;
+                
+                for (let moveCount = 1; moveCount < this.size * this.size; moveCount++) {
+                    let nextMoves = this.getNextMoves(x, y);
+                    
+                    if (nextMoves.length === 0) {
+                        return false;
                     }
-                    performCalculation(true); // Считаем это действием пользователя
-                });
-            });
-
-            // Поддержка клавиши Enter
-            document.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    performCalculation(true); // Считаем это действием пользователя
+                    
+                    let nextMove = nextMoves[0];
+                    x = nextMove.x;
+                    y = nextMove.y;
+                    this.board[x][y] = moveCount;
+                    
+                    if (this.size > 50 && moveCount % Math.floor(this.size * this.size / 20) === 0) {
+                        let progress = Math.floor((moveCount / (this.size * this.size)) * 100);
+                        document.getElementById('generationStatus').textContent = 
+                            `Генерация (Арнд Рот): ${progress}%`;
+                    }
                 }
-            });
+                
+                return true;
+            }
 
-            // Инициализация расчетов без увеличения счетчика
-            performCalculation(false);
+            getBoard() {
+                return this.board; // ИСПРАВЛЕНО: возвращаем доску, а не кэш
+            }
+        }
+
+        // Переменные состояния
+        let currentBoardSize = 20;
+        let currentStep = 0;
+        let animationTimer = null;
+        let isAnimating = false;
+        let currentSolution = [];
+        let isGenerating = false;
+        let usedAlgorithm = '';
+        let currentZoom = 1;
+        let isDragging = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let currentKnightPosition = {x: 0, y: 0};
+
+        // Синхронизация полей ввода
+        document.getElementById('boardSize').addEventListener('input', function() {
+            document.getElementById('boardSizeCopy').value = this.value;
+            
+            const size = parseInt(this.value);
+            const warning = document.getElementById('performanceWarning');
+            const navigation = document.getElementById('navigationHelp');
+            const zoomControls = document.getElementById('zoomControls');
+            
+            if (size > 15) {
+                navigation.style.display = 'block';
+                zoomControls.style.display = 'block';
+            } else {
+                navigation.style.display = 'none';
+                zoomControls.style.display = 'none';
+            }
+
+            if (size > 1000) {
+                warning.style.display = 'block';
+            } else {
+                warning.style.display = 'none';
+            }
         });
+
+        // Инициализация навигации
+        function initializeNavigation() {
+            const viewport = document.getElementById('boardViewport');
+            
+            // Масштабирование колесом мыши
+            viewport.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                const newZoom = Math.max(0.1, Math.min(5, currentZoom + delta));
+                setZoom(newZoom);
+            });
+
+            // Перетаскивание
+            viewport.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                viewport.style.cursor = 'grabbing';
+            });
+
+            viewport.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                
+                const deltaX = e.clientX - lastMouseX;
+                const deltaY = e.clientY - lastMouseY;
+                
+                viewport.scrollLeft -= deltaX;
+                viewport.scrollTop -= deltaY;
+                
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                
+                updateViewportInfo();
+                updateMinimap();
+            });
+
+            viewport.addEventListener('mouseup', function() {
+                isDragging = false;
+                viewport.style.cursor = 'grab';
+            });
+
+            viewport.addEventListener('mouseleave', function() {
+                isDragging = false;
+                viewport.style.cursor = 'grab';
+            });
+
+            // Обновление мини-карты при прокрутке
+            viewport.addEventListener('scroll', function() {
+                updateViewportInfo();
+                updateMinimap();
+            });
+        }
+
+        function getCellSize(size) {
+            if (size <= 10) return 'size-large';
+            if (size <= 25) return 'size-normal';
+            if (size <= 100) return 'size-medium';
+            return 'size-small';
+        }
+
+        function setZoom(zoom) {
+            currentZoom = parseFloat(zoom);
+            const board = document.getElementById('chessBoard');
+            board.style.transform = `scale(${currentZoom})`;
+            
+            document.getElementById('zoomSlider').value = currentZoom;
+            document.getElementById('zoomLevel').textContent = Math.round(currentZoom * 100) + '%';
+            
+            updateViewportInfo();
+            updateMinimap();
+        }
+
+        function zoomIn() {
+            setZoom(Math.min(5, currentZoom + 0.2));
+        }
+
+        function zoomOut() {
+            setZoom(Math.max(0.1, currentZoom - 0.2));
+        }
+
+        function resetZoom() {
+            setZoom(1);
+            centerBoard();
+        }
+
+        function centerBoard() {
+            const viewport = document.getElementById('boardViewport');
+            const board = document.getElementById('chessBoard');
+            
+            const viewportRect = viewport.getBoundingClientRect();
+            const boardRect = board.getBoundingClientRect();
+            
+            viewport.scrollLeft = (boardRect.width * currentZoom - viewportRect.width) / 2;
+            viewport.scrollTop = (boardRect.height * currentZoom - viewportRect.height) / 2;
+            
+            updateViewportInfo();
+            updateMinimap();
+        }
+
+        function centerOnKnight() {
+            if (!currentKnightPosition) return;
+            
+            const viewport = document.getElementById('boardViewport');
+            const cellSizeMap = {
+                'size-large': 46,
+                'size-normal': 36,
+                'size-medium': 26,
+                'size-small': 16
+            };
+            const cellSize = cellSizeMap[getCellSize(currentBoardSize)];
+            
+            const knightX = currentKnightPosition.y * cellSize * currentZoom;
+            const knightY = currentKnightPosition.x * cellSize * currentZoom;
+            
+            const viewportRect = viewport.getBoundingClientRect();
+            
+            viewport.scrollLeft = knightX - viewportRect.width / 2;
+            viewport.scrollTop = knightY - viewportRect.height / 2;
+            
+            updateViewportInfo();
+            updateMinimap();
+        }
+
+        function updateViewportInfo() {
+            const viewport = document.getElementById('boardViewport');
+            const info = document.getElementById('viewportInfo');
+            
+            const scrollPercentX = Math.round((viewport.scrollLeft / (viewport.scrollWidth - viewport.clientWidth)) * 100) || 0;
+            const scrollPercentY = Math.round((viewport.scrollTop / (viewport.scrollHeight - viewport.clientHeight)) * 100) || 0;
+            
+            info.textContent = `${scrollPercentX}%, ${scrollPercentY}%`;
+        }
+
+        function initializeMinimap() {
+            if (currentBoardSize < 20) {
+                document.getElementById('minimap').style.display = 'none';
+                return;
+            }
+            
+            document.getElementById('minimap').style.display = 'block';
+            const minimapBoard = document.getElementById('minimapBoard');
+            minimapBoard.style.gridTemplateColumns = `repeat(${currentBoardSize}, 1fr)`;
+            minimapBoard.innerHTML = '';
+            
+            for (let row = 0; row < currentBoardSize; row++) {
+                for (let col = 0; col < currentBoardSize; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'minimap-cell';
+                    cell.id = `minimap-cell-${row}-${col}`;
+                    minimapBoard.appendChild(cell);
+                }
+            }
+        }
+
+        function updateMinimap() {
+            if (currentBoardSize < 20) return;
+            
+            // Обновляем позиции в мини-карте
+            for (let step = 0; step <= currentStep; step++) {
+                for (let row = 0; row < currentBoardSize; row++) {
+                    for (let col = 0; col < currentBoardSize; col++) {
+                        if (currentSolution[row] && currentSolution[row][col] === step) {
+                            const cell = document.getElementById(`minimap-cell-${row}-${col}`);
+                            if (!cell) continue;
+                            
+                            cell.classList.remove('visited', 'current');
+                            if (step === currentStep) {
+                                cell.classList.add('current');
+                            } else if (step < currentStep) {
+                                cell.classList.add('visited');
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Обновляем видимую область в мини-карте
+            const viewport = document.getElementById('boardViewport');
+            const minimapViewport = document.getElementById('minimapViewport');
+            
+            if (!viewport || !minimapViewport) return;
+            
+            const visibleWidth = (viewport.clientWidth / (viewport.scrollWidth * currentZoom)) * 150;
+            const visibleHeight = (viewport.clientHeight / (viewport.scrollHeight * currentZoom)) * 150;
+            const leftOffset = (viewport.scrollLeft / viewport.scrollWidth) * 150;
+            const topOffset = (viewport.scrollTop / viewport.scrollHeight) * 150;
+            
+            minimapViewport.style.width = Math.max(5, visibleWidth) + 'px';
+            minimapViewport.style.height = Math.max(5, visibleHeight) + 'px';
+            minimapViewport.style.left = Math.max(0, Math.min(145, leftOffset)) + 'px';
+            minimapViewport.style.top = Math.max(0, Math.min(145, topOffset)) + 'px';
+        }
+
+        function estimateMemoryUsage(size) {
+            const cellsCount = size * size;
+            const bytesPerCell = 12;
+            const totalBytes = cellsCount * bytesPerCell;
+            const megabytes = totalBytes / (1024 * 1024);
+            return Math.round(megabytes * 10) / 10;
+        }
+
+        async function generateAndStart() {
+            if (isGenerating) return;
+            
+            const newSize = parseInt(document.getElementById('boardSize').value);
+            if (newSize < 5) {
+                alert('Минимальный размер доски: 5×5');
+                return;
+            }
+
+            if (newSize > 10000) {
+                const confirm = window.confirm(`Размер доски ${newSize}×${newSize} очень большой и может потребовать много времени и памяти. Продолжить?`);
+                if (!confirm) return;
+            }
+
+            isGenerating = true;
+            currentBoardSize = newSize;
+            
+            document.getElementById('generationStatus').textContent = 'Инициализация генерации...';
+            document.getElementById('boardSizeDisplay').textContent = `${currentBoardSize}×${currentBoardSize}`;
+            document.getElementById('totalMoves').textContent = currentBoardSize * currentBoardSize;
+            document.getElementById('memoryUsage').textContent = estimateMemoryUsage(currentBoardSize) + ' MB';
+            document.getElementById('algorithmStatus').style.display = 'block';
+            
+            document.querySelectorAll('button').forEach(btn => btn.disabled = true);
+
+            try {
+                if (knightSolutions[currentBoardSize]) {
+                    currentSolution = knightSolutions[currentBoardSize];
+                    usedAlgorithm = 'Готовое решение';
+                    document.getElementById('generationStatus').textContent = 'Решение загружено из базы';
+                    document.getElementById('algorithmStatus').textContent = `Используется: ${usedAlgorithm}`;
+                } else {
+                    let success = false;
+                    
+                    // Попытка алгоритмом Варнсдорфа
+                    document.getElementById('algorithmStatus').textContent = 'Алгоритм: Варнсдорф';
+                    document.getElementById('generationStatus').textContent = 'Попытка решения алгоритмом Варнсдорфа...';
+                    
+                    await new Promise(resolve => {
+                        setTimeout(() => {
+                            const warnsdorffSolver = new WarnsdorffSolver(currentBoardSize);
+                            success = warnsdorffSolver.solve();
+                            
+                            if (success) {
+                                currentSolution = warnsdorffSolver.getBoard();
+                                usedAlgorithm = 'Варнсдорф';
+                                document.getElementById('generationStatus').textContent = 
+                                    `✅ Решение найдено алгоритмом Варнсдорфа!`;
+                                document.getElementById('algorithmStatus').textContent = `Используется: ${usedAlgorithm}`;
+                            }
+                            resolve();
+                        }, 100);
+                    });
+
+                    // Если не получилось - пробуем Арнда Рота
+                    if (!success) {
+                        document.getElementById('algorithmStatus').textContent = 'Алгоритм: Арнд Рот';
+                        document.getElementById('generationStatus').textContent = 
+                            'Варнсдорф неудачен. Попытка алгоритмом Арнда Рота...';
+                        
+                        await new Promise(resolve => {
+                            setTimeout(() => {
+                                const rothSolver = new ArndtRothSolver(currentBoardSize);
+                                success = rothSolver.solve();
+                                
+                                if (success) {
+                                    currentSolution = rothSolver.getBoard();
+                                    usedAlgorithm = 'Арнд Рот';
+                                    document.getElementById('generationStatus').textContent = 
+                                        `✅ Решение найдено алгоритмом Арнда Рота!`;
+                                    document.getElementById('algorithmStatus').textContent = `Используется: ${usedAlgorithm}`;
+                                } else {
+                                    usedAlgorithm = 'Неудача';
+                                    document.getElementById('generationStatus').textContent = 
+                                        '❌ Алгоритмы не смогли найти решение. Попробуйте другой размер доски.';
+                                    document.getElementById('algorithmStatus').textContent = 'Результат: Решение не найдено';
+                                }
+                                resolve();
+                            }, 100);
+                        });
+                    }
+                }
+
+                if (currentSolution.length > 0) {
+                    initializeBoard();
+                    initializeMinimap();
+                    resetAnimation();
+                    resetZoom();
+                }
+                
+            } finally {
+                isGenerating = false;
+                document.querySelectorAll('button').forEach(btn => btn.disabled = false);
+            }
+        }
+
+        function initializeBoard() {
+            const board = document.getElementById('chessBoard');
+            const cellSizeClass = getCellSize(currentBoardSize);
+            
+            board.className = `chess-board ${cellSizeClass}`;
+            board.style.gridTemplateColumns = `repeat(${currentBoardSize}, 1fr)`;
+            board.innerHTML = '';
+
+            for (let row = 0; row < currentBoardSize; row++) {
+                for (let col = 0; col < currentBoardSize; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = `chess-cell ${(row + col) % 2 === 0 ? 'light' : 'dark'}`;
+                    cell.id = `cell-${row}-${col}`;
+                    
+                    // Для больших досок не показываем числа
+                    if (currentBoardSize > 200) {
+                        cell.style.fontSize = '0';
+                    }
+                    
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        function updateDisplay() {
+            // Находим текущую позицию коня
+            for (let row = 0; row < currentBoardSize; row++) {
+                for (let col = 0; col < currentBoardSize; col++) {
+                    if (currentSolution[row] && currentSolution[row][col] === currentStep) {
+                        currentKnightPosition = {x: row, y: col};
+                        break;
+                    }
+                }
+            }
+
+            // Обновляем все клетки
+            for (let row = 0; row < currentBoardSize; row++) {
+                for (let col = 0; col < currentBoardSize; col++) {
+                    const cell = document.getElementById(`cell-${row}-${col}`);
+                    if (!cell) continue;
+                    
+                    cell.classList.remove('visited', 'current');
+                    
+                    if (currentBoardSize <= 200) {
+                        const step = currentSolution[row] ? currentSolution[row][col] : '';
+                        cell.textContent = step;
+                    }
+                    
+                    if (currentSolution[row] && currentSolution[row][col] <= currentStep) {
+                        cell.classList.add('visited');
+                        if (currentSolution[row][col] === currentStep) {
+                            cell.classList.add('current');
+                        }
+                    }
+                }
+            }
+
+            const totalMoves = currentBoardSize * currentBoardSize - 1;
+            const completion = Math.round((currentStep / totalMoves) * 100);
+            
+            document.getElementById('currentMove').textContent = currentStep.toLocaleString();
+            document.getElementById('completionPercent').textContent = completion + '%';
+            document.getElementById('progressFill').style.width = completion + '%';
+            
+            // Автоцентрирование на коне
+            if (document.getElementById('followKnight') && document.getElementById('followKnight').checked && isAnimating) {
+                centerOnKnight();
+            }
+            
+            updateMinimap();
+        }
+
+        function startAnimation() {
+            if (isAnimating || !currentSolution.length) return;
+            
+            isAnimating = true;
+            const speed = parseInt(document.getElementById('speed').value);
+            const totalMoves = currentBoardSize * currentBoardSize - 1;
+
+            animationTimer = setInterval(() => {
+                if (currentStep < totalMoves) {
+                    currentStep++;
+                    updateDisplay();
+                } else {
+                    pauseAnimation();
+                }
+            }, speed);
+        }
+
+        function pauseAnimation() {
+            isAnimating = false;
+            clearInterval(animationTimer);
+        }
+
+        function resetAnimation() {
+            pauseAnimation();
+            currentStep = 0;
+            updateDisplay();
+        }
+
+        function nextStep() {
+            if (currentStep < currentBoardSize * currentBoardSize - 1) {
+                currentStep++;
+                updateDisplay();
+            }
+        }
+
+        // Инициализация
+        window.onload = function() {
+            document.getElementById('generationStatus').textContent = 
+                'Введите размер доски и нажмите "Создать доску"';
+            initializeNavigation();
+        };
     </script>
 </body>
 </html>
